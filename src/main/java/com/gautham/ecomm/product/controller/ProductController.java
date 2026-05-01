@@ -1,10 +1,13 @@
 package com.gautham.ecomm.product.controller;
 
 import com.gautham.ecomm.product.dto.CreateProductRequest;
-import com.gautham.ecomm.product.entity.Product;
+import com.gautham.ecomm.product.dto.ProductResponse;
 import com.gautham.ecomm.product.service.ProductService;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public Product createProduct(
+    public ProductResponse createProduct(
             @Valid @RequestBody CreateProductRequest request
     ) {
 
@@ -25,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
 
         return productService.getAllProducts();
     }

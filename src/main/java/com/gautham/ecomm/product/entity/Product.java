@@ -5,6 +5,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import com.gautham.ecomm.user.entity.User;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
 @Entity
 @Table(name = "products")
 
@@ -28,4 +32,8 @@ public class Product {
     private Integer stock;
 
     private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 }

@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.CUSTOMER)
+                .role(Role.SELLER)
                 .createdAt(LocalDateTime.now())
                 .build();
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {

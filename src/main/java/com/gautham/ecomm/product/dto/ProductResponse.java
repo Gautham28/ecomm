@@ -1,15 +1,26 @@
 package com.gautham.ecomm.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@AllArgsConstructor
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@Builder
 public class ProductResponse {
 
     private Long id;
 
     private String name;
 
-    private Double price;
+    private String description;
+
+    private BigDecimal price;
+
+    private Integer stock;
+
+    private String sellerEmail;
+
+    private LocalDateTime createdAt;
 }

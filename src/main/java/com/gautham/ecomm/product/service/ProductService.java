@@ -1,13 +1,15 @@
 package com.gautham.ecomm.product.service;
 
 import com.gautham.ecomm.product.dto.CreateProductRequest;
-import com.gautham.ecomm.product.entity.Product;
+import com.gautham.ecomm.product.dto.ProductResponse;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product createProduct(CreateProductRequest request);
+    ProductResponse createProduct(
+            CreateProductRequest request
+    );
 
-    List<Product> getAllProducts();
+    List<ProductResponse> getAllProducts();
 }
