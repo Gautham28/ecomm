@@ -2,6 +2,7 @@ package com.gautham.ecomm.auth.service.impl;
 
 import com.gautham.ecomm.auth.dto.RegisterRequest;
 import com.gautham.ecomm.auth.service.AuthService;
+import com.gautham.ecomm.exception.EmailAlreadyExistsException;
 import com.gautham.ecomm.user.entity.Role;
 import com.gautham.ecomm.user.entity.User;
 import com.gautham.ecomm.user.repository.UserRepository;
@@ -29,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
                 .createdAt(LocalDateTime.now())
                 .build();
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         userRepository.save(user);
