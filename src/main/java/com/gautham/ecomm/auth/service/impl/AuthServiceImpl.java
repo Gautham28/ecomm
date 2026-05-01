@@ -1,8 +1,11 @@
 package com.gautham.ecomm.auth.service.impl;
 
+import com.gautham.ecomm.auth.dto.AuthResponse;
+import com.gautham.ecomm.auth.dto.LoginRequest;
 import com.gautham.ecomm.auth.dto.RegisterRequest;
 import com.gautham.ecomm.auth.service.AuthService;
 import com.gautham.ecomm.exception.EmailAlreadyExistsException;
+import com.gautham.ecomm.security.JwtService;
 import com.gautham.ecomm.user.entity.Role;
 import com.gautham.ecomm.user.entity.User;
 import com.gautham.ecomm.user.repository.UserRepository;
@@ -18,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public String register(RegisterRequest request) {
@@ -36,5 +40,26 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    @Override
+    public AuthResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid email or password"));
+
+        boolean matches = passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword()
+        );
+
+        if (!matches) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new AuthResponse(token);
     }
 }
