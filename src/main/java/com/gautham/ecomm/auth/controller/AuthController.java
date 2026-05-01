@@ -2,6 +2,7 @@ package com.gautham.ecomm.auth.controller;
 
 import com.gautham.ecomm.auth.dto.RegisterRequest;
 import com.gautham.ecomm.auth.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
+    public String register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
     }
 }

@@ -28,6 +28,9 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.CUSTOMER)
                 .createdAt(LocalDateTime.now())
                 .build();
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
 
         userRepository.save(user);
 
