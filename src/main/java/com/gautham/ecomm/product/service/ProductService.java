@@ -1,27 +1,23 @@
 package com.gautham.ecomm.product.service;
 
 import com.gautham.ecomm.product.dto.CreateProductRequest;
+import com.gautham.ecomm.product.dto.PagedProductsResponse;
 import com.gautham.ecomm.product.dto.ProductResponse;
 import com.gautham.ecomm.product.dto.UpdateProductRequest;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    ProductResponse createProduct(
-            CreateProductRequest request
-    );
+    ProductResponse createProduct(CreateProductRequest request);
 
-    List<ProductResponse> getAllProducts();
+    PagedProductsResponse getProducts(String nameSearch, Pageable pageable);
 
+    PagedProductsResponse searchProductsByName(String name, Pageable pageable);
 
-    ProductResponse updateProduct(
-            Long productId,
-            UpdateProductRequest request
-    );
+    ProductResponse updateProduct(Long productId, UpdateProductRequest request);
 
     void deleteProduct(Long productId);
 
     ProductResponse getProductById(Long productId);
-    
 }

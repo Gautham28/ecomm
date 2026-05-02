@@ -20,6 +20,11 @@ import java.util.List;
 
 import com.gautham.ecomm.product.dto.UpdateProductRequest;
 
+import com.gautham.ecomm.product.dto.PagedProductsResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -48,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-                .price(request.getPrice())
+                .price(request.getPrice().doubleValue())
                 .stock(request.getStock())
                 .seller(seller)
                 .createdAt(LocalDateTime.now())
@@ -61,12 +66,52 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAllProducts() {
+    public PagedProductsResponse getProducts(
+            String nameSearch,
+            Pageable pageable
+    ) {
 
-        return productRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        Page<Product> page =
+                StringUtils.hasText(nameSearch)
+                        ? productRepository.findByNameContainingIgnoreCase(
+                        nameSearch.trim(),
+                        pageable
+                )
+                        : productRepository.findAll(pageable);
+
+        return toPagedProductsResponse(page);
+    }
+
+    @Override
+    public PagedProductsResponse searchProductsByName(
+            String name,
+            Pageable pageable
+    ) {
+
+        Page<Product> page =
+                productRepository.findByNameContainingIgnoreCase(
+                        name.trim(),
+                        pageable
+                );
+
+        return toPagedProductsResponse(page);
+    }
+
+    private PagedProductsResponse toPagedProductsResponse(Page<Product> page) {
+
+        return PagedProductsResponse.builder()
+                .content(
+                        page.getContent().stream()
+                                .map(this::mapToResponse)
+                                .toList()
+                )
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
     }
 
     private ProductResponse mapToResponse(

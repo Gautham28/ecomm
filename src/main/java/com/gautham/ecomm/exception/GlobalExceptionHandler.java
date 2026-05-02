@@ -1,5 +1,7 @@
 package com.gautham.ecomm.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +36,23 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolation(
+            ConstraintViolationException ex
+    ) {
+
+        Map<String, String> errors =
+                ex.getConstraintViolations().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        v -> v.getPropertyPath().toString(),
+                                        ConstraintViolation::getMessage
+                                )
+                        );
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
