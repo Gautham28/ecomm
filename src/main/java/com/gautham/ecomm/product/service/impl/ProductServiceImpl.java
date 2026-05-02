@@ -148,4 +148,16 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(product);
     }
+
+    @Override
+    public ProductResponse getProductById(Long productId) {
+
+        Product product = productRepository
+                .findById(productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
+
+        return mapToResponse(product);
+    }
 }
+

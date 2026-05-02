@@ -14,10 +14,14 @@ public interface ProductService {
 
     List<ProductResponse> getAllProducts();
 
+
     ProductResponse updateProduct(
             Long productId,
             UpdateProductRequest request
     );
 
     void deleteProduct(Long productId);
+
+    ProductResponse getProductById(Long productId);
+    
 }
