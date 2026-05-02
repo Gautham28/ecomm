@@ -18,4 +18,6 @@ public interface ProductService {
             Long productId,
             UpdateProductRequest request
     );
+
+    void deleteProduct(Long productId);
 }

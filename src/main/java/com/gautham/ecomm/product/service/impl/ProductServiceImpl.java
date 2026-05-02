@@ -121,4 +121,31 @@ public class ProductServiceImpl implements ProductService {
 
         return mapToResponse(updatedProduct);
     }
+
+    @Override
+    public void deleteProduct(Long productId) {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String email = authentication.getName();
+
+        Product product = productRepository
+                .findById(productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
+
+        if (!product.getSeller()
+                .getEmail()
+                .equals(email)) {
+
+            throw new RuntimeException(
+                    "You are not allowed to delete this product"
+            );
+        }
+
+        productRepository.delete(product);
+    }
 }
