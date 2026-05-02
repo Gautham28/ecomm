@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.gautham.ecomm.product.dto.UpdateProductRequest;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -80,5 +82,43 @@ public class ProductServiceImpl implements ProductService {
                 .sellerEmail(product.getSeller().getEmail())
                 .createdAt(product.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    public ProductResponse updateProduct(
+            Long productId,
+            UpdateProductRequest request
+    ) {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String email = authentication.getName();
+
+        Product product = productRepository
+                .findById(productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
+
+        if (!product.getSeller()
+                .getEmail()
+                .equals(email)) {
+
+            throw new RuntimeException(
+                    "You are not allowed to update this product"
+            );
+        }
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice().doubleValue());
+        product.setStock(request.getStock());
+
+        Product updatedProduct =
+                productRepository.save(product);
+
+        return mapToResponse(updatedProduct);
     }
 }

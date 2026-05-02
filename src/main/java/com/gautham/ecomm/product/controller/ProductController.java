@@ -2,6 +2,7 @@ package com.gautham.ecomm.product.controller;
 
 import com.gautham.ecomm.product.dto.CreateProductRequest;
 import com.gautham.ecomm.product.dto.ProductResponse;
+import com.gautham.ecomm.product.dto.UpdateProductRequest;
 import com.gautham.ecomm.product.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -31,5 +32,14 @@ public class ProductController {
     public List<ProductResponse> getAllProducts() {
 
         return productService.getAllProducts();
+    }
+
+    @PutMapping("/{id}")
+    public ProductResponse updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateProductRequest request
+    ) {
+
+        return productService.updateProduct(id, request);
     }
 }
